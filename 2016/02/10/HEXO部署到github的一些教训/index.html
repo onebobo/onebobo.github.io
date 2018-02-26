@@ -111,16 +111,26 @@
           </section>
 
           <section class="post-content">
-            <h2 id="这是摘要"><a href="#这是摘要" class="headerlink" title="这是摘要"></a>这是摘要</h2><p>为了用<code>hexo deploy</code>这个命令来部署网页，真的走了好多弯路！</p>
+            <h2 id="这是摘要"><a href="#这是摘要" class="headerlink" title="这是摘要"></a>这是摘要</h2><p>整理一些hexo部署本静态碰到的坑。</p>
 <a id="more"></a>
 <hr>
-<h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p>HEXO生成的静态网页存储在public文件夹中，在运行deploy命令时实际上是把public里面的内容复制到了deploy目录然后push到设置好的github仓库中。<br>道理都明白，可是部署时就报错了，然后很傻逼的看到网上说要用这个命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure></p>
+<h2 id="第一次"><a href="#第一次" class="headerlink" title="第一次"></a>第一次</h2><p>HEXO生成的静态网页存储在public文件夹中，在运行deploy命令时实际上是把public里面的内容复制到了deploy目录然后push到设置好的github仓库中。<br>道理都明白，可是部署时就报错了，然后很傻逼的看到网上说要用这个命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure></p>
 <p>如果想要正常发布网页，千万不要用这个命令！！<br>这样虽然不会出错，但是会把整个源文件全部替换到远程仓库中，然后网页的位置变了看不到了呀<br>这不是我想要的结果！<br>那么，报错的正确解决方式应该是这样的：</p>
 <p>错误1，fatal: Not a git repository (or any of the parent directories): .git<br>解决方法：删除deploy文件夹！（？）</p>
 <p>错误2，fatal: could not read Username for ‘<a href="https://github.com&#39;" target="_blank" rel="noopener">https://github.com&#39;</a><br>解决方法：将https部署改为ssh部署<br><a href="http://www.yczmm.com/hexo-deploy%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3.html" target="_blank" rel="noopener">参考链接</a></p>
 <p>然后给一个觉得还不错的搭建Hexo的教程<a href="http://www.jianshu.com/p/05289a4bc8b2" target="_blank" rel="noopener">链接</a></p>
 <p>另外，发现可以不用安装git，换成<a href="https://desktop.github.com/" target="_blank" rel="noopener">github desktop</a>,这样貌似可以不用手动设置ssh，在程序中登陆之后直接用git shell来执行部署操作。</p>
 <h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>总算是完成了一点点事情，说实话我并没有写技术博客的习惯。现在之所以熬夜写这个是觉得老是被自己蠢哭就算了总不能再不长记性吧。<br>我是小白，欢迎指正</p>
+<hr>
+<p>##后补</p>
+<p>2018年2月25日</p>
+<p>现在除了玩游戏，主要使用linux，因此今天将hexo环境在linux上搭了一下。总结起来就做了这么几件事：</p>
+<ol>
+<li>使用gitment作为评论系统</li>
+<li>rsa认证遇到点小问题</li>
+<li>换了个主题</li>
+</ol>
+<p>其中，gitment使用起来问题不大，网上的教程也很多。要注意的就是不同的主题适配上去的方法稍有不同，但都是在评论区copy代码，一般不会太困难。<br>rsa遇到的问题就是生成的密钥文件（id_rsa）一定要放在<code>~/.ssh/</code>这个目录下。估计是进行ssh连接时系统会默认在这个目录下找私钥进行加密。<br>另外，hexo的命令相比之前版本有一些变动。比如需要安装<code>hexo-cli</code>，<code>hexo-deployer-git</code>这样的东西，遇到错误最好按照官网的说明一步步来。</p>
 
           </section>
         </article>
@@ -147,26 +157,23 @@
         <div class="comment-section">
   
     
-
-  <!-- Gitment评论插件通用代码 -->
-<div id="git"></div>
-<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
-<script>
-var gitment = new Gitment({
-  owner: "onebobo",//github用户名
-  repo: "onebobo.github.io",//用户存储评论的github项目名称
-  oauth: {
-    client_id: "7e7ad248b7716ed9c292",//注册OAuth Application时生产的ClinetID
-    client_secret:"5652a2403b17346017a4bbb5487aa90184e29d48",//注册OAuth Application时生成的Client Secret
-  },
-})
-gitment.render('git')
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+      <script type="text/javascript">
+          var gitalk = new Gitalk({
+            clientID:  '{{theme.gitalk.clientID}}', 
+            clientSecret: '{{theme.gitalk.clientSecret}}',
+            id: window.location.pathname,
+            repo: '{{theme.gitalk.repo}}', 
+            owner: '{{theme.gitalk.owner}}', 
+            admin: ['{{theme.gitalk.admin}}'], 
+            distractionFreeMode: '{{theme.gitalk.distractionFreeMode}}',
+          })
+          gitalk.render('gitalk-container')
 </script>
-<!-- Gitment代码结束 -->
 
 
-  
 
 
 
