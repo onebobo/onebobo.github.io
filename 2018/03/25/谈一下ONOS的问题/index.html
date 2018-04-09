@@ -3,7 +3,7 @@
         <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
             
             <title>
-                HEXO部署到github的一些教训 | NO ONE
+                谈一下ONOS的问题 | NO ONE
             </title>
             <meta content="width=device-width, initial-scale=1" name="viewport">
             <meta name="theme-color" content="#4184f3">
@@ -98,39 +98,32 @@
           <header class="post-header">
           
           </header>
-          <h1 class="post-title">HEXO部署到github的一些教训</h1>
+          <h1 class="post-title">谈一下ONOS的问题</h1>
 
           <section class="post-info">
-            <span class="post-date">2016/02/10</span>
+            <span class="post-date">2018/03/25</span>
             
             
             <span class="post-tags">
-              <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/deploy/">deploy</a></li><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
+              <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/work/">work</a></li></ul>
             </span>
             
           </section>
 
           <section class="post-content">
-            <h2 id="这是摘要"><a href="#这是摘要" class="headerlink" title="这是摘要"></a>这是摘要</h2><p>整理一些hexo部署本静态碰到的坑。</p>
-<a id="more"></a>
-<hr>
-<h2 id="第一次"><a href="#第一次" class="headerlink" title="第一次"></a>第一次</h2><p>HEXO生成的静态网页存储在public文件夹中，在运行deploy命令时实际上是把public里面的内容复制到了deploy目录然后push到设置好的github仓库中。<br>道理都明白，可是部署时就报错了，然后很傻逼的看到网上说要用这个命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure></p>
-<p>如果想要正常发布网页，千万不要用这个命令！！<br>这样虽然不会出错，但是会把整个源文件全部替换到远程仓库中，然后网页的位置变了看不到了呀<br>这不是我想要的结果！<br>那么，报错的正确解决方式应该是这样的：</p>
-<p>错误1，fatal: Not a git repository (or any of the parent directories): .git<br>解决方法：删除deploy文件夹！（？）</p>
-<p>错误2，fatal: could not read Username for ‘<a href="https://github.com&#39;" target="_blank" rel="noopener">https://github.com&#39;</a><br>解决方法：将https部署改为ssh部署<br><a href="http://www.yczmm.com/hexo-deploy%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3.html" target="_blank" rel="noopener">参考链接</a></p>
-<p>然后给一个觉得还不错的搭建Hexo的教程<a href="http://www.jianshu.com/p/05289a4bc8b2" target="_blank" rel="noopener">链接</a></p>
-<p>另外，发现可以不用安装git，换成<a href="https://desktop.github.com/" target="_blank" rel="noopener">github desktop</a>,这样貌似可以不用手动设置ssh，在程序中登陆之后直接用git shell来执行部署操作。</p>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>总算是完成了一点点事情，说实话我并没有写技术博客的习惯。现在之所以熬夜写这个是觉得老是被自己蠢哭就算了总不能再不长记性吧。<br>我是小白，欢迎指正</p>
-<hr>
-<p>##后补</p>
-<p>2018年2月25日</p>
-<p>现在除了玩游戏，主要使用linux，因此今天将hexo环境在linux上搭了一下。总结起来就做了这么几件事：</p>
-<ol>
-<li>使用gitment作为评论系统</li>
-<li>rsa认证遇到点小问题</li>
-<li>换了个主题</li>
-</ol>
-<p>其中，gitment使用起来问题不大，网上的教程也很多。要注意的就是不同的主题适配上去的方法稍有不同，但都是在评论区copy代码，一般不会太困难。<br>rsa遇到的问题就是生成的密钥文件（id_rsa）一定要放在<code>~/.ssh/</code>这个目录下。估计是进行ssh连接时系统会默认在这个目录下找私钥进行加密。<br>另外，hexo的命令相比之前版本有一些变动。比如需要安装<code>hexo-cli</code>，<code>hexo-deployer-git</code>这样的东西，遇到错误最好按照官网的说明一步步来。</p>
+            <p>ONOS是运营商主推的一个开源SDN框架，其具有良好的集群性能、丰富的服务接口和强大的可扩展性。多个厂商都有基于ONOS开发的控制器项目。可以说ONOS算是一个很有前景的开源框架了。</p>
+<p>本文基于笔者的实践经验，片面地谈一下ONOS在实际工程中的问题缺陷。</p>
+<h2 id="openflow強相关"><a href="#openflow強相关" class="headerlink" title="openflow強相关"></a>openflow強相关</h2><p>尽管官方对ONOS核心层的描述是协议无关，但很多设计明显是基于openflow的考虑。如</p>
+<ul>
+<li>FlowRule,FlowObjective子系统</li>
+<li>Intent在早期只能编译成FlowRuleIntent或FlowObjectiveIntent，虽然现在安装流程也有了可扩展性，但总体不可控，对非openflow的SDN场景很不友好</li>
+<li>系统默认的Driver就是openflow协议。如果强行不启动driver，核心组件DriverService会自动关闭，进而导致很多其它组件都满足不了依赖要求</li>
+</ul>
+<p>openflow标准过于简单化和理想化网络设备，很难应用于实际线网。这也给ONOS的应用带来了一些困难。</p>
+<h2 id="集群问题"><a href="#集群问题" class="headerlink" title="集群问题"></a>集群问题</h2><p>从ONOS早期的论文可以看出，ONOS考虑过集群的多种实现方式，早期使用Cassandra作为存储框架并使用Zookeeper实现一致性；由于性能原因，采用了RAM Cloud来存储集群一致性数据。<br>在onos的原始版本中可以看到ramcloud、casaandra的影子，至于后来为什么选择了atomix，我感觉很迷。</p>
+<h2 id="一些实现上的问题"><a href="#一些实现上的问题" class="headerlink" title="一些实现上的问题"></a>一些实现上的问题</h2><p>这部分等我啥时候离职了再更吧[捂脸]</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>我想什么时候folk一下onos项目，启一个简化的，工程适用的项目。虽然在公司做过很多相关工作了，但一是自认为程度还不够，二是不能开源。</p>
+<p>比如ODL框架就只是一个单纯的模型驱动的控制器平台啊，业务相关的应用都以插件的形式进行开发。</p>
 
           </section>
         </article>
@@ -139,15 +132,15 @@
        
         <div class="pager">
           
-            <a class="post-prev pager-item" href="/2016/03/06/March/" >
+            <a class="post-prev pager-item" href="/2018/04/09/设施选址问题/" >
               <strong class="article-nav-caption">上一篇</strong>
-              <p class="post-nav-title">March</p>
+              <p class="post-nav-title">对设施选址问题原始对偶方案的理解</p>
             </a>
           
           
-            <a class="post-next pager-item" href="/2016/02/08/Hello World/">
+            <a class="post-next pager-item" href="/2016/06/30/我真是遭不住了/">
               <strong class="article-nav-caption">下一篇</strong>
-              <p class="post-nav-title">Hello World</p>
+              <p class="post-nav-title">我真是遭不住了</p>
             </a>
           
         </div>
@@ -162,7 +155,7 @@
 <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
       <script type="text/javascript">
           var gitalk = new Gitalk({
-            id:'Wed Feb 10 2016 00:17:59 GMT+0800',
+            id:'Sun Mar 25 2018 19:19:01 GMT+0800',
             clientID:"2fd76124d3522384c88d", 
             clientSecret:"666e47b4daa64f01161d4771155195fbca22827b",
             repo:"onebobo.github.io", 
