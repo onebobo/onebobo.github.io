@@ -3,7 +3,7 @@
         <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
             
             <title>
-                谈一下ONOS的问题 | NO ONE
+                如何套用拟阵解释贪心算法 | NO ONE
             </title>
             <meta content="width=device-width, initial-scale=1" name="viewport">
             <meta name="theme-color" content="#4184f3">
@@ -98,33 +98,23 @@
           <header class="post-header">
           
           </header>
-          <h1 class="post-title">谈一下ONOS的问题</h1>
+          <h1 class="post-title">如何套用拟阵解释贪心算法</h1>
 
           <section class="post-info">
-            <span class="post-date">2018/03/25</span>
+            <span class="post-date">2018/06/18</span>
             
             
             <span class="post-tags">
-              <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/work/">work</a></li></ul>
+              <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/算法/">算法</a></li></ul>
             </span>
             
           </section>
 
           <section class="post-content">
-            <p>ONOS是运营商主推的一个开源SDN框架，其具有良好的集群性能、丰富的服务接口和强大的可扩展性。多个厂商都有基于ONOS开发的控制器项目。可以说ONOS算是一个很有前景的开源框架了。</p>
-<p>本文基于笔者的实践经验，片面地谈一下ONOS在实际工程中的问题缺陷。</p>
-<h2 id="openflow強相关"><a href="#openflow強相关" class="headerlink" title="openflow強相关"></a>openflow強相关</h2><p>尽管官方对ONOS核心层的描述是协议无关，但很多设计明显是基于openflow的考虑。如</p>
+            <p>我们知道，某个问题通过贪心算法可获得最优解，当且仅当该问题可以规约成在一个拟阵中寻求最大独立集的问题。然而在公开博客中的很多贪心算法分析中，常常将该算法的适用解释为两个性质：贪心性质和最优子结构。其中贪心性质表述为整体最优解可通过一系列局部最优解达到——有点用结果定义原因的感觉。</p>
 <ul>
-<li>FlowRule,FlowObjective子系统</li>
-<li>Intent在早期只能编译成FlowRuleIntent或FlowObjectiveIntent，虽然现在安装流程也有了可扩展性，但总体不可控，对非openflow的SDN场景很不友好</li>
-<li>系统默认的Driver就是openflow协议。如果强行不启动driver，核心组件DriverService会自动关闭，进而导致很多其它组件都满足不了依赖要求</li>
+<li>待更</li>
 </ul>
-<p>openflow标准过于简单化和理想化网络设备，很难应用于实际线网。这也给ONOS的应用带来了一些困难。</p>
-<h2 id="集群问题"><a href="#集群问题" class="headerlink" title="集群问题"></a>集群问题</h2><p>从ONOS早期的论文可以看出，ONOS考虑过集群的多种实现方式，早期使用Cassandra作为存储框架并使用Zookeeper实现一致性；由于性能原因，采用了RAM Cloud来存储集群一致性数据。<br>在onos的原始版本中可以看到ramcloud、casaandra的影子，至于后来为什么选择了atomix，我感觉很迷。</p>
-<p>后更：讨论后觉得，控制器集成一个分布式框架的原因很可能是为了更好的扩展性和保障集群性能。比如使用了第三方的分布式存储，很可能选举、分区这些信息不可见也不可控了。</p>
-<h2 id="一些实现上的问题"><a href="#一些实现上的问题" class="headerlink" title="一些实现上的问题"></a>一些实现上的问题</h2><p>这部分等我啥时候离职了再更吧[捂脸]</p>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>ONOS适合于SDN的标准化，但实际开发中，自带的协议无关子系统框架多数情况下并不好用。实际工作中，常常需要对ONOS源码和打包运行脚本进行一些调整，做一个简化的、工程适用的平台。</p>
-<p>我觉得，既然选择了ONOS，就应该尽可能地接受ONOS核心层标准化的模型框架。如果考虑到工程应用的复杂性、一定要自己定义一套控制器模型，认为ODL核心功能纯粹，更适合于这样的场景。</p>
 
           </section>
         </article>
@@ -133,15 +123,10 @@
        
         <div class="pager">
           
-            <a class="post-prev pager-item" href="/2018/04/09/设施选址问题/" >
-              <strong class="article-nav-caption">上一篇</strong>
-              <p class="post-nav-title">对设施选址问题原始对偶方案的理解</p>
-            </a>
           
-          
-            <a class="post-next pager-item" href="/2018/02/06/wson中继分配专利/">
+            <a class="post-next pager-item" href="/2018/04/09/设施选址问题/">
               <strong class="article-nav-caption">下一篇</strong>
-              <p class="post-nav-title">一种光传输网络规划中分配中继资源的计算方法</p>
+              <p class="post-nav-title">对设施选址问题原始对偶方案的理解</p>
             </a>
           
         </div>
@@ -156,7 +141,7 @@
 <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
       <script type="text/javascript">
           var gitalk = new Gitalk({
-            id:'Sun Mar 25 2018 19:19:01 GMT+0800',
+            id:'Mon Jun 18 2018 20:58:01 GMT+0800',
             clientID:"2fd76124d3522384c88d", 
             clientSecret:"666e47b4daa64f01161d4771155195fbca22827b",
             repo:"onebobo.github.io", 
